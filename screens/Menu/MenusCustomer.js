@@ -1,0 +1,315 @@
+import React, { useState, useEffect } from "react";
+import { Image, View, FlatList, TouchableOpacity, Alert, StyleSheet, Modal, TouchableHighlight } from "react-native";
+import { IconButton, Text, TextInput } from "react-native-paper";
+import firestore from '@react-native-firebase/firestore';
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
+
+const MenusCustomer = ({ navigation }) => {
+    const [initialMenus, setInitialMenus] = useState([]);
+    const [menus, setMenus] = useState([]);
+    const [name, setName] = useState('');
+    const [appointments, setAppointments] = useState([]);
+    const [selectedMenu, setSelectedMenu] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    useEffect(() => {
+        const unsubscribeMenus = firestore()
+            .collection('Menus')
+            .onSnapshot(querySnapshot => {
+                const menus = [];
+                querySnapshot.forEach(documentSnapshot => {
+                    menus.push({
+                        ...documentSnapshot.data(),
+                        id: documentSnapshot.id,
+                    });
+                });
+
+                setMenus(menus);
+                setInitialMenus(menus);
+            });
+
+        return () => unsubscribeMenus();
+    }, []);
+
+    useEffect(() => {
+        const unsubscribeAppointments = firestore()
+            .collection('Appointments')
+            .onSnapshot(querySnapshot => {
+                const appointments = [];
+                querySnapshot.forEach(documentSnapshot => {
+                    appointments.push({
+                        ...documentSnapshot.data(),
+                        id: documentSnapshot.id,
+                    });
+                });
+
+                setAppointments(appointments);
+            });
+
+        return () => unsubscribeAppointments();
+    }, []);
+
+    const renderItem = ({ item }) => (
+        <TouchableOpacity 
+            style={styles.itemContainer} 
+            onPress={() => handleDetail(item)}
+        >
+            <Menu>
+                <MenuTrigger>
+                <View style={styles.itemContent}>
+                {item.image ? (
+                    <Image
+                        source={{ uri: item.image }}
+                        style={styles.itemImage}
+                        resizeMode="cover"
+                    />
+                ) : (
+                    <Image
+                        source={require('../assets/placeholder.png')}
+                        style={styles.itemImage}
+                        resizeMode="cover"
+                    />
+                )}
+                <Text style={styles.itemTitle}>{item.title}</Text>
+                <Text style={styles.itemPrice}>{parseFloat(item.price).toLocaleString()} ₫</Text>
+                </View>
+                </MenuTrigger>
+                <MenuOptions>
+                    <MenuOption onSelect={() => handleDetail(item)}>
+                        <Text>Thông tin</Text>
+                    </MenuOption>
+                    <MenuOption onSelect={() => openAddMenuModal(item)}>
+                        <Text>Thêm món vào bàn</Text>
+                    </MenuOption>
+                </MenuOptions>
+            </Menu>
+        </TouchableOpacity>
+    );
+
+    const handleDetail = (menu) => {
+        navigation.navigate("MenuDetail", { menu });
+    }
+
+    const openAddMenuModal = (menu) => {
+        setSelectedMenu(menu);
+        setModalVisible(true);
+    }
+
+    const handleAddMenuToAppointment = async (appointment) => {
+        try {
+            const appointmentRef = firestore().collection('Appointments').doc(appointment.id);
+            const updatedFoods = appointment.food ? [...appointment.food, { title: selectedMenu.title, price: selectedMenu.price }] : [{ title: selectedMenu.title, price: selectedMenu.price }];
+            await appointmentRef.update({ food: updatedFoods });
+            const updatedAppointmentPrice = (parseFloat(appointment.price) + parseFloat(selectedMenu.price)).toString();
+            await appointmentRef.update({ price: updatedAppointmentPrice });
+            const serviceRef = firestore().collection('Services').doc(appointment.serviceId);
+            const serviceDoc = await serviceRef.get();
+            const serviceData = serviceDoc.data();
+            const updatedServiceFoods = serviceData.foods ? [...serviceData.foods, { title: selectedMenu.title, price: selectedMenu.price }] : [{ title: selectedMenu.title, price: selectedMenu.price }];
+            await serviceRef.update({ foods: updatedServiceFoods });
+            Alert.alert("Đã thêm món thành công!");
+            setModalVisible(false);
+        } catch (error) {
+            console.error("Lỗi khi thêm món ăn vào cuộc hẹn:", error);
+        }
+    }
+    const filterMenusByCategory = (category) => {
+        const filteredMenus = initialMenus.filter(menu => menu.category === category);
+        setMenus(filteredMenus);
+    };
+    return (
+        <View style={{ flex: 1 }}>
+            <Image source={require("../assets/logo.png")}
+                style={styles.logo}
+            />
+            <TextInput
+                label={"Tìm món"}
+                value={name}
+                onChangeText={(text) => {
+                    setName(text);
+                    const result = initialMenus.filter(menu => menu.title.toLowerCase().includes(text.toLowerCase()));
+                    setMenus(result);
+                }}
+                style={styles.searchInput}
+            />
+            <View style={styles.categoriesContainer}>
+                <TouchableOpacity onPress={() => filterMenusByCategory("Tráng miệng")} style={[styles.categoryButton, { width: '33%', flexDirection: "row" }]}>
+                    <Image source={require("../assets/icecreamcup.png")} style={{height: 20, width: 20}}/>
+                    <Text style={styles.categoryButtonText}>Tráng miệng</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => filterMenusByCategory("Món chính")} style={[styles.categoryButton, { width: '30%', flexDirection: "row"  }]}>
+                    <Image source={require("../assets/tray.png")} style={{height: 20, width: 20}}/>
+                    <Text style={styles.categoryButtonText}> Món chính</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => filterMenusByCategory("Đồ uống")} style={[styles.categoryButton, { width: '30%', flexDirection: "row"  }]}>
+                    <Image source={require("../assets/soda.png")} style={{height: 20, width: 20}}/>
+                    <Text style={styles.categoryButtonText}> Đồ uống</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>
+                    Danh sách menu
+                </Text>
+            </View>
+            <FlatList
+                data={menus}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+                numColumns={3}
+            />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Chọn bàn đã đặt để thêm món: </Text>
+                    <FlatList
+                        data={appointments}
+                        renderItem={({ item }) => (
+                            <TouchableHighlight
+                                style={styles.appointmentItem}
+                                onPress={() => handleAddMenuToAppointment(item)}
+                            >
+                                <Text style={styles.appointmentText}>{item.title}</Text>
+                            </TouchableHighlight>
+                        )}
+                        keyExtractor={item => item.id}
+                    />
+                    <TouchableHighlight
+                        style={styles.closeButton}
+                        onPress={() => setModalVisible(!modalVisible)}
+                    >
+                        <Text style={styles.textStyle}>Đóng</Text>
+                    </TouchableHighlight>
+                </View>
+            </Modal>
+        </View>
+    )
+}
+
+const styles = StyleSheet.create({
+    logo: {
+        alignSelf: "center",
+        marginVertical: 20,
+    },
+    searchInput: {
+        marginHorizontal: 15,
+        marginBottom: 20
+    },
+    header: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 15,
+        marginBottom: 10,
+    },
+    headerText: {
+        marginTop: 10,
+        fontSize: 25,
+        fontWeight: "bold",
+    },
+    addButton: {
+        width: 30,
+        height: 30,
+        margin: 20,
+    },
+    itemContainer: {
+        flex: 1,
+        margin: 5,
+        backgroundColor: '#e0e0e0',
+        borderRadius: 15,
+        overflow: 'hidden',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    itemContent: {
+        padding: 15,
+        alignItems: 'center',
+    },
+    itemImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 10,
+    },
+    itemTitle: {
+        marginTop: 10,
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+    itemPrice: {
+        fontSize: 16,
+        color: 'green',
+    },
+    itemState: {
+        fontSize: 16,
+        color: 'gray',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    closeButton: {
+        backgroundColor: "pink",
+        borderRadius: 20,
+        padding: 10,
+        marginTop: 10,
+        elevation: 2
+    },
+    textStyle: {
+        color: "black",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        fontSize: 20,
+        fontWeight: "bold"
+    },
+    appointmentItem: {
+        padding: 10,
+        margin: 5,
+        backgroundColor: "#f0f0f0",
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    appointmentText: {
+        textAlign: "center",
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+    categoriesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 0,
+    },
+    categoryButton: {
+        backgroundColor: '#ccc',
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 10,
+    },
+    categoryButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+});
+
+export default MenusCustomer;
