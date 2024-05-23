@@ -167,18 +167,22 @@ const MenusCustomer = ({ navigation }) => {
             >
                 <View style={styles.modalView}>
                     <Text style={styles.modalText}>Chọn bàn đã đặt để thêm món: </Text>
-                    <FlatList
-                        data={appointments}
-                        renderItem={({ item }) => (
-                            <TouchableHighlight
-                                style={styles.appointmentItem}
-                                onPress={() => handleAddMenuToAppointment(item)}
-                            >
-                                <Text style={styles.appointmentText}>{item.title}</Text>
-                            </TouchableHighlight>
-                        )}
-                        keyExtractor={item => item.id}
-                    />
+                    {appointments.length > 0 ? (
+                        <FlatList
+                            data={appointments}
+                            renderItem={({ item }) => (
+                                <TouchableHighlight
+                                    style={styles.appointmentItem}
+                                    onPress={() => handleAddMenuToAppointment(item)}
+                                >
+                                    <Text style={styles.appointmentText}>{item.title}</Text>
+                                </TouchableHighlight>
+                            )}
+                            keyExtractor={item => item.id}
+                        />
+                    ) : (
+                        <Text style={styles.noAppointmentText}>Chưa đặt bàn</Text>
+                    )}
                     <TouchableHighlight
                         style={styles.closeButton}
                         onPress={() => setModalVisible(!modalVisible)}
@@ -293,6 +297,12 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 18,
         fontWeight: "bold",
+    },
+    noAppointmentText: {
+        fontSize: 18,
+        color: 'red',
+        textAlign: 'center',
+        marginVertical: 10,
     },
     categoriesContainer: {
         flexDirection: 'row',

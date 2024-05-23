@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet, ScrollView, Modal, TouchableHighlight } from "react-native";
+import { View, FlatList, StyleSheet, ScrollView, Modal, TouchableHighlight, Alert } from "react-native";
 import { Text, Button } from "react-native-paper";
 import firestore from '@react-native-firebase/firestore';
 import { useMyContextProvider } from "../index";
@@ -133,18 +133,22 @@ const Appointments = ({ navigation }) => {
                 >
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Chọn món ăn bạn muốn xóa khỏi bàn:</Text>
-                        <FlatList
-                            data={selectedAppointment.food}
-                            renderItem={({ item, index }) => (
-                                <TouchableHighlight
-                                    style={styles.foodItem}
-                                    onPress={() => handleDeleteFood(item, index)}
-                                >
-                                    <Text style={styles.foodText}>{item.title}</Text>
-                                </TouchableHighlight>
-                            )}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
+                        {selectedAppointment.food && selectedAppointment.food.length > 0 ? (
+                            <FlatList
+                                data={selectedAppointment.food}
+                                renderItem={({ item, index }) => (
+                                    <TouchableHighlight
+                                        style={styles.foodItem}
+                                        onPress={() => handleDeleteFood(item, index)}
+                                    >
+                                        <Text style={styles.foodText}>{item.title}</Text>
+                                    </TouchableHighlight>
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        ) : (
+                            <Text style={styles.noFoodText}>Chưa đặt món</Text>
+                        )}
                         <TouchableHighlight
                             style={styles.closeButton}
                             onPress={() => setModalVisible(!modalVisible)}
@@ -237,6 +241,12 @@ const styles = StyleSheet.create({
     foodText: {
         fontSize: 18,
         fontWeight: "bold",
+    },
+    noFoodText: {
+        fontSize: 18,
+        color: 'red',
+        textAlign: 'center',
+        marginVertical: 10,
     },
 });
 
