@@ -55,7 +55,6 @@ const createAccount = (email, password, fullName, phone, address, role) => {
     auth().createUserWithEmailAndPassword(email, password, fullName, phone, address, role)
     .then(() => {
         Alert.alert("Tạo tài khoản thành công với email là: " + email);
-        navigation.navigate("Login")
         USERS.doc(email)
         .set({
             email,
