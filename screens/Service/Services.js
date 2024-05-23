@@ -76,7 +76,7 @@ const Services = ({ navigation }) => {
         try {
             navigation.navigate("ServiceUpdate", { service });
         } catch (error) {
-            console.error("Lỗi khi cập nhật dịch vụ:", error);
+            console.error("Lỗi khi cập nhật bàn:", error);
         }
     }
 
@@ -97,11 +97,11 @@ const Services = ({ navigation }) => {
                             .doc(service.id)
                             .delete()
                             .then(() => {
-                                console.log("Dịch vụ đã được xóa thành công!");
+                                Alert.alert("Bàn đã được xóa thành công!");
                                 navigation.navigate("Services");
                             })
                             .catch(error => {
-                                console.error("Lỗi khi xóa dịch vụ:", error);
+                                console.error("Lỗi khi xóa bàn:", error);
                             });
                     },
                     style: "default"

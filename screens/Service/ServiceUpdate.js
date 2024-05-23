@@ -63,7 +63,7 @@ const ServiceUpdate = ({ route, navigation }) => {
 
             navigation.goBack();
         } catch (error) {
-            console.error("Lỗi khi cập nhật dịch vụ:", error);
+            console.error("Lỗi khi cập nhật bàn:", error);
         }
     }
 

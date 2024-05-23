@@ -53,7 +53,7 @@ const UserUpdate = ({ route, navigation }) => {
 
             navigation.navigate("Customers");
         } catch (error) {
-            console.error("Error updating user:", error);
+            console.error("Lỗi khi cập nhật khách hàng:", error);
         }
     }
 
@@ -121,8 +121,8 @@ const UserUpdate = ({ route, navigation }) => {
                     selectedValue={selectedRole}
                     onValueChange={(itemValue) => setSelectedRole(itemValue)}
                 >
-                    <Picker.Item label="admin" value="admin" />
-                    <Picker.Item label="customer" value="customer" />
+                    <Picker.Item color="#FF8C00" label="admin" value="admin" />
+                    <Picker.Item color="#FF8C00" label="customer" value="customer" />
                 </Picker>
                 <Button buttonColor="pink" textColor="black" mode="contained" onPress={handleUpdateUser} disabled={disableUpdate}>
                     Cập nhật

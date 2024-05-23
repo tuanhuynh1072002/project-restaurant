@@ -35,7 +35,7 @@ const ProfileUpdate = ({ navigation, route }) => {
                 navigation.navigate(userData.role === 'admin' ? 'Profile' : 'ProfileCustomer');
             })
             .catch(error => {
-                console.error('Error updating user: ', error);
+                console.error('Lỗi khi cập nhật thông tin: ', error);
             });
     }
 
@@ -73,8 +73,8 @@ const ProfileUpdate = ({ navigation, route }) => {
                         onValueChange={(itemValue, itemIndex) => setRole(itemValue)}
                         style={styles.input}
                     >
-                        <Picker.Item label="Admin" value="admin" />
-                        <Picker.Item label="Customer" value="customer" />
+                        <Picker.Item color="#FF8C00" label="Admin" value="admin" />
+                        <Picker.Item color="#FF8C00" label="Customer" value="customer" />
                     </Picker>
                 )}
                 <Button textColor="black" buttonColor="pink" mode="contained" onPress={handleUpdateProfile} style={styles.button} disabled={disableButton}>

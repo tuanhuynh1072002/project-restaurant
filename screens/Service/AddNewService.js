@@ -87,11 +87,11 @@ const AddNewService = ({ navigation }) => {
                     onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
                     style={{ marginBottom: 10, borderWidth: 1, borderColor: '#ccc' }}
                 >
-                    <Picker.Item label="Bàn 2 người" value="Bàn 2 người" />
-                    <Picker.Item label="Bàn 4 người" value="Bàn 4 người" />
-                    <Picker.Item label="Bàn 8 người" value="Bàn 8 người" />
-                    <Picker.Item label="Bàn 12 người" value="Bàn 12 người" />
-                    <Picker.Item label="Bàn 20 người" value="Bàn 20 người" />
+                    <Picker.Item color="#FF8C00" label="Bàn 2 người" value="Bàn 2 người" />
+                    <Picker.Item color="#FF8C00" label="Bàn 4 người" value="Bàn 4 người" />
+                    <Picker.Item color="#FF8C00" label="Bàn 8 người" value="Bàn 8 người" />
+                    <Picker.Item color="#FF8C00" label="Bàn 12 người" value="Bàn 12 người" />
+                    <Picker.Item color="#FF8C00" label="Bàn 20 người" value="Bàn 20 người" />
                 </Picker>
                 <Button buttonColor="pink" textColor="black" mode="contained" onPress={handleAddNewService}>Thêm bàn</Button>
             </ScrollView>

@@ -66,10 +66,10 @@ const Appointments = ({ navigation }) => {
             const updatedServiceFoods = serviceData.foods.filter((item, i) => i !== index);
             await serviceRef.update({ foods: updatedServiceFoods });
 
-            console.log("Food item successfully deleted from both Appointments and Services!");
+            console.log("Món ăn đã được xóa khỏi bàn!");
             setModalVisible(false);
         } catch (error) {
-            console.error("Error deleting food item:", error);
+            console.error("Lỗi khi xóa món ăn:", error);
         }
     };
 
@@ -100,10 +100,10 @@ const Appointments = ({ navigation }) => {
 
                             await firestore().collection('Appointments').doc(appointmentsData.id).delete();
 
-                            console.log("Appointment successfully deleted!");
+                            console.log("Bàn đã được hủy!");
                             navigation.navigate("Appointments");
                         } catch (error) {
-                            console.error("Error deleting appointment:", error);
+                            console.error("Lỗi khi hủy bàn:", error);
                         }
                     },
                     style: "destructive"

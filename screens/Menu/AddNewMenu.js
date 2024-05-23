@@ -95,9 +95,9 @@ const AddNewMenu = ({ navigation }) => {
                     onValueChange={(itemValue) => setCategory(itemValue)}
                     style={{ marginBottom: 10, borderWidth: 1, borderColor: "#ccc" }}
                 >
-                    <Picker.Item label="Tráng miệng" value="Tráng miệng" />
-                    <Picker.Item label="Món chính" value="Món chính" />
-                    <Picker.Item label="Đồ uống" value="Đồ uống" />
+                    <Picker.Item color="#FF8C00" label="Tráng miệng" value="Tráng miệng" />
+                    <Picker.Item color="#FF8C00" label="Món chính" value="Món chính" />
+                    <Picker.Item color="#FF8C00" label="Đồ uống" value="Đồ uống" />
                 </Picker>
                 <Button buttonColor="pink" textColor="black" mode="contained" onPress={handleAddNewMenu}>
                     Thêm món ăn

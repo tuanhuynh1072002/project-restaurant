@@ -27,7 +27,7 @@ const ForgotPassword = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        console.error("Error fetching document: ", error);
+        console.error("Lỗi: ", error);
         setPassword('');
         setError('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
       });

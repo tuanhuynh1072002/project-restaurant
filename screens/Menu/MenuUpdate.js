@@ -40,7 +40,7 @@ const MenuUpdate = ({ route, navigation }) => {
 
             navigation.navigate("Menu");
         } catch (error) {
-            console.error("Lỗi khi cập nhật dịch vụ:", error);
+            console.error("Lỗi khi cập nhật món:", error);
         }
     }
 

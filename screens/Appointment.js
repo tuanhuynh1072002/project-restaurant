@@ -64,7 +64,7 @@ const Appointment = ({ navigation, route }) => {
             navigation.navigate("Appointments");
         })
         .catch(error => {
-            console.error("Error adding document: ", error);
+            console.error("Lỗi khi đặt bàn: ", error);
         });
     };
 

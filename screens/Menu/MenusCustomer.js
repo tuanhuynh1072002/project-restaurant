@@ -110,7 +110,7 @@ const MenusCustomer = ({ navigation }) => {
             Alert.alert("Đã thêm món thành công!");
             setModalVisible(false);
         } catch (error) {
-            console.error("Lỗi khi thêm món ăn vào cuộc hẹn:", error);
+            console.error("Lỗi khi thêm món ăn vào bàn:", error);
         }
     }
     const filterMenusByCategory = (category) => {

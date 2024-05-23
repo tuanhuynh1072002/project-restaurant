@@ -72,7 +72,7 @@ const Menus = ({ navigation }) => {
         try {
             navigation.navigate("MenuUpdate", { menu });
         } catch (error) {
-            console.error("Lỗi khi cập nhật dịch vụ:", error);
+            console.error("Lỗi khi cập nhật món:", error);
         }
     }
 
@@ -93,11 +93,11 @@ const Menus = ({ navigation }) => {
                             .doc(menu.id)
                             .delete()
                             .then(() => {
-                                console.log("Dịch vụ đã được xóa thành công!");
+                                Alert.alert("Món đã được xóa thành công!");
                                 navigation.navigate("Menu");
                             })
                             .catch(error => {
-                                console.error("Lỗi khi xóa dịch vụ:", error);
+                                console.error("Lỗi khi xóa món:", error);
                             });
                     },
                     style: "default"
