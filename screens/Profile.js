@@ -34,7 +34,7 @@ const Profile = ({ navigation }) => {
 
     return (
         <View style={{ flex: 1 }}>
-            <Text style={{ padding: 15, fontSize: 25, fontWeight: "bold" }}>Profile Screens</Text>
+            <Text style={{ padding: 15, fontSize: 25, fontWeight: "bold" }}>Profile</Text>
             {userData !== null && (
                 <View style={{ flexDirection: 'row', padding: 10 }}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Email: </Text>

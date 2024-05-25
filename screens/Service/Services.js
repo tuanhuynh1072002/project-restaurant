@@ -32,8 +32,7 @@ const Services = ({ navigation }) => {
 
     const renderItem = ({ item }) => (
         <TouchableOpacity 
-            style={styles.itemContainer} 
-            onPress={() => handleDetail(item)}
+            style={styles.itemContainer}
         >
             <Menu>
                 <MenuTrigger>

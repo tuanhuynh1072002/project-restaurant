@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Image, View, FlatList, TouchableOpacity, Alert, StyleSheet, Modal, TouchableHighlight } from "react-native";
-import { IconButton, Text, TextInput } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import firestore from '@react-native-firebase/firestore';
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
 
@@ -52,8 +52,7 @@ const MenusCustomer = ({ navigation }) => {
 
     const renderItem = ({ item }) => (
         <TouchableOpacity 
-            style={styles.itemContainer} 
-            onPress={() => handleDetail(item)}
+            style={styles.itemContainer}
         >
             <Menu>
                 <MenuTrigger>
@@ -114,6 +113,7 @@ const MenusCustomer = ({ navigation }) => {
             console.error("Lỗi khi thêm món ăn vào bàn:", error);
         }
     }
+
     const filterMenusByCategory = (category) => {
         if (selectedCategory === category) {
             setMenus(initialMenus);
@@ -124,6 +124,7 @@ const MenusCustomer = ({ navigation }) => {
             setSelectedCategory(category);
         }
     };
+
     return (
         <View style={{ flex: 1 }}>
             <Image source={require("../assets/logo.png")}
@@ -140,17 +141,38 @@ const MenusCustomer = ({ navigation }) => {
                 style={styles.searchInput}
             />
             <View style={styles.categoriesContainer}>
-                <TouchableOpacity onPress={() => filterMenusByCategory("Tráng miệng")} style={[styles.categoryButton, { width: '33%', flexDirection: "row" }]}>
+                <TouchableOpacity 
+                    onPress={() => filterMenusByCategory("Tráng miệng")} 
+                    style={[
+                        styles.categoryButton, 
+                        selectedCategory === "Tráng miệng" && styles.selectedCategoryButton,
+                        { width: '33%', flexDirection: "row" }
+                    ]}
+                >
                     <Image source={require("../assets/icecreamcup.png")} style={{height: 20, width: 20}}/>
                     <Text style={styles.categoryButtonText}>Tráng miệng</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => filterMenusByCategory("Món chính")} style={[styles.categoryButton, { width: '30%', flexDirection: "row"  }]}>
+                <TouchableOpacity 
+                    onPress={() => filterMenusByCategory("Món chính")} 
+                    style={[
+                        styles.categoryButton, 
+                        selectedCategory === "Món chính" && styles.selectedCategoryButton,
+                        { width: '30%', flexDirection: "row" }
+                    ]}
+                >
                     <Image source={require("../assets/tray.png")} style={{height: 20, width: 20}}/>
-                    <Text style={styles.categoryButtonText}> Món chính</Text>
+                    <Text style={styles.categoryButtonText}>Món chính</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => filterMenusByCategory("Đồ uống")} style={[styles.categoryButton, { width: '30%', flexDirection: "row"  }]}>
+                <TouchableOpacity 
+                    onPress={() => filterMenusByCategory("Đồ uống")} 
+                    style={[
+                        styles.categoryButton, 
+                        selectedCategory === "Đồ uống" && styles.selectedCategoryButton,
+                        { width: '30%', flexDirection: "row" }
+                    ]}
+                >
                     <Image source={require("../assets/soda.png")} style={{height: 20, width: 20}}/>
-                    <Text style={styles.categoryButtonText}> Đồ uống</Text>
+                    <Text style={styles.categoryButtonText}>Đồ uống</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.header}>
@@ -322,11 +344,14 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 10,
     },
+    selectedCategoryButton: {
+        backgroundColor: '#aaa',
+    },
     categoryButtonText: {
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center'
     },
-});
+})
 
 export default MenusCustomer;
