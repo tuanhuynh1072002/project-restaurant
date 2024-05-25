@@ -52,26 +52,37 @@ const USERS = firestore().collection("USERS");
 
 // Action
 const createAccount = (email, password, fullName, phone, address, role) => {
-    auth().createUserWithEmailAndPassword(email, password, fullName, phone, address, role)
-    .then(() => {
-        Alert.alert("Tạo tài khoản thành công với email là: " + email);
-        USERS.doc(email)
-        .set({
-            email,
-            password,
-            fullName,
-            phone,
-            address,
-            role: "customer"
-        })
-        .catch(error => {
-            throw new Error("Lỗi thêm dữ liệu tài khoản: ", error);
-        });
-    })
-    .catch(error => {
-        throw new Error("Lỗi tạo tài khoản: ", error);
-    });
-};
+    USERS.doc(email).get()
+      .then(docSnapshot => {
+        if (docSnapshot.exists) {
+          Alert.alert("Email đã tồn tại trong hệ thống.");
+        } else {
+          auth().createUserWithEmailAndPassword(email, password)
+            .then(() => {
+              Alert.alert("Tạo tài khoản thành công với email là: " + email);
+              USERS.doc(email)
+                .set({
+                  email,
+                  fullName,
+                  password,
+                  phone,
+                  address,
+                  role: "customer"
+                })
+                .catch(error => {
+                  throw new Error("Lỗi thêm dữ liệu tài khoản: ", error);
+                });
+            })
+            .catch(error => {
+              throw new Error("Lỗi tạo tài khoản: ", error);
+            });
+        }
+      })
+      .catch(error => {
+        throw new Error("Lỗi kiểm tra email: ", error);
+      });
+  };
+  
 
 const login = (dispatch, email, password) => {
     auth().signInWithEmailAndPassword(email, password)

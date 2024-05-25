@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, Alert } from 'react-native';
 import { TextInput, Button, Text, HelperText } from 'react-native-paper';
 import firestore from "@react-native-firebase/firestore";
 
@@ -23,15 +23,16 @@ const ForgotPassword = ({ navigation }) => {
           setError('');
         } else {
           setPassword('');
-          setError('Email không tồn tại trong hệ thống.');
+          Alert.alert('Thông báo', 'Email không tồn tại trong hệ thống.');
         }
       })
       .catch((error) => {
         console.error("Lỗi: ", error);
         setPassword('');
-        setError('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+        Alert.alert('Thông báo', 'Đã có lỗi xảy ra. Vui lòng thử lại sau.');
       });
   };
+
   useEffect(() => {
     setDisableGetPassword(email.trim() === '' || !!error || hasErrorEmail());
   }, [email, error, hasErrorEmail]);
@@ -39,8 +40,8 @@ const ForgotPassword = ({ navigation }) => {
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <Image source={require("../assets/logocircle.png")}
-                style={styles.logo}
-            />
+             style={styles.logo}
+      />
       <TextInput
         label={"Nhập chính xác Email của bạn"}
         value={email}
@@ -66,12 +67,14 @@ const ForgotPassword = ({ navigation }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   logo: {
     alignSelf: "center",
     marginVertical: 60,
     height: 200,
     width: 200
-},
-})
+  },
+});
+
 export default ForgotPassword;

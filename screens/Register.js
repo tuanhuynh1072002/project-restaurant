@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { Image, View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import { TextInput, Button, Text, HelperText } from 'react-native-paper';
 import { createAccount } from '../index';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -30,7 +30,7 @@ const Register = ({ navigation }) => {
       phone.trim() === '' ||
       address.trim() === ''
     );
-  }, [fullName, email, password, confirmPassword, phone, address, hasErrorFullName, hasErrorEmail, hasErrorPassword, hasErrorPasswordConfirm]);
+  }, [fullName, email, password, confirmPassword, phone, address]);
 
   const handleRegister = () => {
     createAccount(email, password, fullName, phone, address, role);
@@ -65,7 +65,7 @@ const Register = ({ navigation }) => {
             label={"Mật khẩu"}
             value={password}
             onChangeText={setPassword}
-            secureTextEntry={showPassword}
+            secureTextEntry={!showPassword}
             style={{ flex: 1 }}
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
@@ -83,7 +83,7 @@ const Register = ({ navigation }) => {
             label={"Xác nhận mật khẩu"}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
-            secureTextEntry={showConfirmPassword}
+            secureTextEntry={!showConfirmPassword}
             style={{ flex: 1 }}
           />
           <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   logo: {
     alignSelf: "center",
     marginVertical: 30,
-},
+  },
 })
 
 export default Register;
