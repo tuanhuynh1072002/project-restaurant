@@ -8,6 +8,7 @@ const Menus = ({ navigation }) => {
     const [initialMenus, setInitialMenus] = useState([]);
     const [menus, setMenus] = useState([]);
     const [name, setName] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     useEffect(() => {
         const unsubscribe = firestore()
@@ -105,9 +106,16 @@ const Menus = ({ navigation }) => {
             ]
         )
     }
+
     const filterMenusByCategory = (category) => {
-        const filteredMenus = initialMenus.filter(menu => menu.category === category);
-        setMenus(filteredMenus);
+        if (selectedCategory === category) {
+            setMenus(initialMenus);
+            setSelectedCategory(null);
+        } else {
+            const filteredMenus = initialMenus.filter(menu => menu.category === category);
+            setMenus(filteredMenus);
+            setSelectedCategory(category);
+        }
     };
     
     const handleDetail = (menu) => {

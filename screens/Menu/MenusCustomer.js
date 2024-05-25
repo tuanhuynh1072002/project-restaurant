@@ -11,6 +11,7 @@ const MenusCustomer = ({ navigation }) => {
     const [appointments, setAppointments] = useState([]);
     const [selectedMenu, setSelectedMenu] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     useEffect(() => {
         const unsubscribeMenus = firestore()
@@ -114,8 +115,14 @@ const MenusCustomer = ({ navigation }) => {
         }
     }
     const filterMenusByCategory = (category) => {
-        const filteredMenus = initialMenus.filter(menu => menu.category === category);
-        setMenus(filteredMenus);
+        if (selectedCategory === category) {
+            setMenus(initialMenus);
+            setSelectedCategory(null);
+        } else {
+            const filteredMenus = initialMenus.filter(menu => menu.category === category);
+            setMenus(filteredMenus);
+            setSelectedCategory(category);
+        }
     };
     return (
         <View style={{ flex: 1 }}>
