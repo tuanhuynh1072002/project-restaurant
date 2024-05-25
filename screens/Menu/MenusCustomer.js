@@ -3,6 +3,7 @@ import { Image, View, FlatList, TouchableOpacity, Alert, StyleSheet, Modal, Touc
 import { Text, TextInput } from "react-native-paper";
 import firestore from '@react-native-firebase/firestore';
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
+import { useMyContextProvider } from "../..";
 
 const MenusCustomer = ({ navigation }) => {
     const [initialMenus, setInitialMenus] = useState([]);
@@ -32,23 +33,28 @@ const MenusCustomer = ({ navigation }) => {
         return () => unsubscribeMenus();
     }, []);
 
+    const [controller, dispatch] = useMyContextProvider();
+    const { userLogin } = controller;
+
     useEffect(() => {
-        const unsubscribeAppointments = firestore()
-            .collection('Appointments')
-            .onSnapshot(querySnapshot => {
-                const appointments = [];
-                querySnapshot.forEach(documentSnapshot => {
-                    appointments.push({
-                        ...documentSnapshot.data(),
-                        id: documentSnapshot.id,
+        if (userLogin?.email) {
+            const unsubscribe = firestore()
+                .collection('Appointments')
+                .where('orderBy', '==', userLogin.email)
+                .onSnapshot(querySnapshot => {
+                    const appointmentsData = [];
+                    querySnapshot.forEach(documentSnapshot => {
+                        appointmentsData.push({
+                            ...documentSnapshot.data(),
+                            id: documentSnapshot.id,
+                        });
                     });
+                    setAppointments(appointmentsData);
                 });
 
-                setAppointments(appointments);
-            });
-
-        return () => unsubscribeAppointments();
-    }, []);
+            return () => unsubscribe();
+        }
+    }, [userLogin]);
 
     const renderItem = ({ item }) => (
         <TouchableOpacity 
