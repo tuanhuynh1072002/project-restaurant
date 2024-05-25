@@ -52,7 +52,7 @@ const ServiceDetail = ({ route }) => {
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Người đặt: </Text>
                 <Text style={{ fontSize: 20 }}>{service.orderBy || "Chưa có người đặt"}</Text>
             </View>
-            <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+            <View style={{ flexDirection: 'column', marginBottom: 5 }}>
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Thông tin: </Text>
                 <Text style={{ fontSize: 20 }}>{service.orderInfo || "Trống"}</Text>
             </View>
@@ -67,7 +67,7 @@ const ServiceDetail = ({ route }) => {
                 <Text style={{ fontSize: 20 }}>{service.note || "Trống"}</Text>
             </View>
             <View style={{ marginBottom: 5 }}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Thức ăn: </Text>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Món ăn: </Text>
                 {service.foods && service.foods.length > 0 ? (
                     service.foods.map((food, index) => (
                         <View key={index}>
