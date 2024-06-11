@@ -140,7 +140,7 @@ const Services = ({ navigation }) => {
                 data={services}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
-                numColumns={3}
+                numColumns={2}
             />
         </View>
     )

@@ -45,41 +45,57 @@ const ProfileUpdate = ({ navigation, route }) => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
             <ScrollView contentContainerStyle={styles.container}>
-                <Image source={require("../assets/logocircle.png")} style={styles.logo} />
-                <TextInput
-                    label="Họ tên"
-                    value={fullName}
-                    onChangeText={text => setFullName(text)}
-                    style={styles.input}
-                />
-                {fullName.trim() == '' && <HelperText type="error">Không được để trống họ tên.</HelperText>}
-                <TextInput
-                    label="Địa chỉ"
-                    value={address}
-                    onChangeText={text => setAddress(text)}
-                    style={styles.input}
-                />
-                {address.trim() == '' && <HelperText type="error">Không được để trống địa chỉ.</HelperText>}
-                <TextInput
-                    label="Điện thoại"
-                    value={phone}
-                    onChangeText={text => setPhone(text)}
-                    style={styles.input}
-                />
-                {phone.trim() == '' && <HelperText type="error">Không được để trống điện thoại.</HelperText>}
-                {userData.role === 'admin' && (
-                    <Picker
-                        selectedValue={role}
-                        onValueChange={(itemValue, itemIndex) => setRole(itemValue)}
+                <View style={styles.formContainer}>
+                    <Image source={require("../assets/logocircle.png")} style={styles.logo} />
+                    <TextInput
+                        label="Họ tên"
+                        value={fullName}
+                        onChangeText={text => setFullName(text)}
                         style={styles.input}
+                        mode="outlined"
+                        theme={{ colors: { primary: '#6200ee' } }}
+                    />
+                    {fullName.trim() === '' && <HelperText type="error" style={styles.helperText}>Không được để trống họ tên.</HelperText>}
+                    <TextInput
+                        label="Địa chỉ"
+                        value={address}
+                        onChangeText={text => setAddress(text)}
+                        style={styles.input}
+                        mode="outlined"
+                        theme={{ colors: { primary: '#6200ee' } }}
+                    />
+                    {address.trim() === '' && <HelperText type="error" style={styles.helperText}>Không được để trống địa chỉ.</HelperText>}
+                    <TextInput
+                        label="Điện thoại"
+                        value={phone}
+                        onChangeText={text => setPhone(text)}
+                        style={styles.input}
+                        mode="outlined"
+                        theme={{ colors: { primary: '#6200ee' } }}
+                    />
+                    {phone.trim() === '' && <HelperText type="error" style={styles.helperText}>Không được để trống điện thoại.</HelperText>}
+                    {userData.role === 'admin' && (
+                        <View style={styles.pickerContainer}>
+                            <Picker
+                                selectedValue={role}
+                                onValueChange={(itemValue, itemIndex) => setRole(itemValue)}
+                                style={styles.picker}
+                            >
+                                <Picker.Item label="Admin" value="admin" />
+                                <Picker.Item label="Customer" value="customer" />
+                            </Picker>
+                        </View>
+                    )}
+                    <Button
+                        mode="contained"
+                        onPress={handleUpdateProfile}
+                        style={styles.button}
+                        disabled={disableButton}
+                        labelStyle={styles.buttonLabel}
                     >
-                        <Picker.Item color="#FF8C00" label="Admin" value="admin" />
-                        <Picker.Item color="#FF8C00" label="Customer" value="customer" />
-                    </Picker>
-                )}
-                <Button textColor="black" buttonColor="pink" mode="contained" onPress={handleUpdateProfile} style={styles.button} disabled={disableButton}>
-                    Cập nhật thông tin
-                </Button>
+                        Cập nhật thông tin
+                    </Button>
+                </View>
             </ScrollView>
         </KeyboardAvoidingView>
     );
@@ -87,20 +103,62 @@ const ProfileUpdate = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     container: {
+        flexGrow: 1,
         justifyContent: 'center',
+        alignItems: 'center',
         padding: 20,
+        backgroundColor: '#f7f7f7',
     },
-    input: {
-        marginBottom: 10,
-    },
-    button: {
-        marginTop: 20,
+    formContainer: {
+        width: '100%',
+        maxWidth: 400,
+        padding: 20,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        alignItems: 'center',
     },
     logo: {
         alignSelf: "center",
-        marginVertical: 30,
-        height: 200,
-        width: 200
+        marginBottom: 30,
+        height: 120,
+        width: 120,
+    },
+    input: {
+        width: '100%',
+        marginBottom: 15,
+        backgroundColor: 'white',
+        fontSize: 16,
+    },
+    pickerContainer: {
+        width: '100%',
+        borderColor: '#6200ee',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 15,
+    },
+    picker: {
+        width: '100%',
+        height: 50,
+    },
+    button: {
+        marginTop: 20,
+        width: '100%',
+        paddingVertical: 12,
+        backgroundColor: 'pink',
+        borderRadius: 5,
+    },
+    buttonLabel: {
+        fontSize: 18,
+        color: 'black',
+    },
+    helperText: {
+        width: '100%',
+        textAlign: 'left',
+        marginTop: -10,
+        marginBottom: 10,
+        fontSize: 14,
     },
 });
 

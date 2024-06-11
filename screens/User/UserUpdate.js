@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, KeyboardAvoidingView, Platform, Image } from 'react-native';
-import { Text, TextInput, Button, HelperText } from "react-native-paper";
+import { View, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, Image } from 'react-native';
+import { Text, TextInput, Button, HelperText, Card } from "react-native-paper";
 import firestore from '@react-native-firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -61,75 +61,150 @@ const UserUpdate = ({ route, navigation }) => {
         <KeyboardAvoidingView
             style={{ flex: 1 }} 
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <ScrollView style={{ padding: 10 }}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Email: </Text>
-                <TextInput
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder="Enter email"
-                />
-                <HelperText type='error' style={{ display: hasErrorEmail() ? 'flex' : 'none' }}>
-                    Email không hợp lệ
-                </HelperText>
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Mật khẩu: </Text>
-                <View style={{ flexDirection: "row" }}>
-                    <TextInput
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry={!showPassword}
-                        style={{ flex: 1 }}
-                    />
-                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                        <Image
-                            source={showPassword ? require('../assets/eye.png') : require('../assets/eye-hidden.png')}
-                            style={{ width: 20, height: 20, margin: 20 }}
-                        />
-                    </TouchableOpacity>
-                </View>
-                <HelperText type='error' style={{ display: hasErrorPassword() ? 'flex' : 'none' }}>
-                    Password phải có ít nhất 6 kí tự
-                </HelperText>
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Họ tên: </Text>
-                <TextInput
-                    value={fullName}
-                    onChangeText={setFullname}
-                    placeholder="Enter full name"
-                />
-                <HelperText type='error' style={{ display: hasErrorFullName() ? 'flex' : 'none' }}>
-                    Họ và tên không được để trống
-                </HelperText>
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Địa chỉ: </Text>
-                <TextInput
-                    value={address}
-                    onChangeText={setAddress}
-                    placeholder="Enter address"
-                />
-                <HelperText type='error' style={{ display: hasErrorAddress() ? 'flex' : 'none' }}>
-                    Địa chỉ không được để trống
-                </HelperText>
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Điện thoại: </Text>
-                <TextInput
-                    value={phone}
-                    onChangeText={setPhone}
-                    placeholder="Enter phone number"
-                />
-                <HelperText type='error' style={{ display: hasErrorPhone() ? 'flex' : 'none' }}>
-                    Số điện thoại không được để trống
-                </HelperText>
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Vai trò: </Text>
-                <Picker
-                    selectedValue={selectedRole}
-                    onValueChange={(itemValue) => setSelectedRole(itemValue)}
-                >
-                    <Picker.Item color="#FF8C00" label="admin" value="admin" />
-                    <Picker.Item color="#FF8C00" label="customer" value="customer" />
-                </Picker>
-                <Button buttonColor="pink" textColor="black" mode="contained" onPress={handleUpdateUser} disabled={disableUpdate}>
-                    Cập nhật
-                </Button>
+            <ScrollView contentContainerStyle={styles.container}>
+                <Card style={styles.card}>
+                    <Card.Content>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                label="Email"
+                                value={email}
+                                onChangeText={setEmail}
+                                placeholder="Enter email"
+                                style={styles.input}
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                            />
+                            <HelperText style={{ display: hasErrorEmail() ? 'flex' : 'none' }} type='error'>
+                                Email không hợp lệ
+                            </HelperText>
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <View style={styles.passwordContainer}>
+                                <TextInput
+                                    label="Mật khẩu"
+                                    value={password}
+                                    onChangeText={setPassword}
+                                    secureTextEntry={!showPassword}
+                                    style={[styles.input, { flex: 1 }]}
+                                />
+                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                                    <Image
+                                        source={showPassword ? require('../assets/eye.png') : require('../assets/eye-hidden.png')}
+                                        style={styles.eyeIcon}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            <HelperText style={{ display: hasErrorPassword() ? 'flex' : 'none' }} type='error'>
+                                Password phải có ít nhất 6 kí tự
+                            </HelperText>
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                label="Họ tên"
+                                value={fullName}
+                                onChangeText={setFullname}
+                                placeholder="Enter full name"
+                                style={styles.input}
+                            />
+                            <HelperText style={{ display: hasErrorFullName() ? 'flex' : 'none' }} type='error'>
+                                Họ và tên không được để trống
+                            </HelperText>
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                label="Địa chỉ"
+                                value={address}
+                                onChangeText={setAddress}
+                                placeholder="Enter address"
+                                style={styles.input}
+                            />
+                            <HelperText style={{ display: hasErrorAddress() ? 'flex' : 'none' }} type='error'>
+                                Địa chỉ không được để trống
+                            </HelperText>
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                label="Điện thoại"
+                                value={phone}
+                                onChangeText={setPhone}
+                                placeholder="Enter phone number"
+                                style={styles.input}
+                                keyboardType="phone-pad"
+                            />
+                            <HelperText style={{ display: hasErrorPhone() ? 'flex' : 'none' }} type='error'>
+                                Số điện thoại không được để trống
+                            </HelperText>
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.pickerLabel}>Vai trò</Text>
+                            <Picker
+                                selectedValue={selectedRole}
+                                onValueChange={(itemValue) => setSelectedRole(itemValue)}
+                                style={styles.picker}
+                            >
+                                <Picker.Item style={{color: "red"}} label="Admin" value="admin" />
+                                <Picker.Item style={{color: "red"}} label="Customer" value="customer" />
+                            </Picker>
+                        </View>
+                        <Button 
+                            mode="contained" 
+                            onPress={handleUpdateUser} 
+                            disabled={disableUpdate}
+                            style={styles.button}
+                            textColor="black"
+                        >
+                            Cập nhật
+                        </Button>
+                    </Card.Content>
+                </Card>
             </ScrollView>
         </KeyboardAvoidingView>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 20,
+        backgroundColor: '#f5f5f5',
+    },
+    card: {
+        borderRadius: 15,
+        elevation: 5,
+    },
+    cardTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+    },
+    inputContainer: {
+        marginBottom: 10,
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    input: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+    },
+    eyeIcon: {
+        width: 24,
+        height: 24,
+        margin: 8,
+    },
+    picker: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        marginTop: 10,
+    },
+    pickerLabel: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    button: {
+        marginTop: 20,
+        padding: 10,
+        backgroundColor: 'pink',
+    },
+});
 
 export default UserUpdate;

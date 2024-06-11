@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet, ScrollView, Modal, TouchableHighlight, Alert } from "react-native";
+import { View, FlatList, StyleSheet, ScrollView, Modal, TouchableOpacity, Alert } from "react-native";
 import { Text, Button } from "react-native-paper";
 import firestore from '@react-native-firebase/firestore';
 import { useMyContextProvider } from "../index";
@@ -33,17 +33,15 @@ const Appointments = ({ navigation }) => {
 
     const renderItem = ({ item }) => (
         <ScrollView style={styles.itemContainer}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                <View style={styles.itemContent}>
-                    <Text style={styles.itemTitle}>{item.title}</Text>
-                    <Text style={styles.itemPrice}>{parseFloat(item.price).toLocaleString()} ₫</Text>
-                    <Text style={[styles.itemState, { color: item.state === "Đã đặt" ? "red" : "black" }]}>{item.state}</Text>
-                </View>
-                <View style={{ flexDirection: "column" }}>
-                    <Button buttonColor="green" mode="contained" style={styles.cancelButton} onPress={() => handleDetail(item)}>Thông tin</Button>
-                    <Button buttonColor="red" mode="contained" style={styles.cancelButton} onPress={() => handleDelete(item)}>Hủy bàn</Button>
-                    <Button buttonColor="blue" mode="contained" style={styles.cancelButton} onPress={() => openDeleteFoodModal(item)}>Xóa món</Button>
-                </View>
+            <View style={styles.itemContent}>
+                <Text style={styles.itemTitle}>{item.title}</Text>
+                <Text style={styles.itemPrice}>{parseFloat(item.price).toLocaleString()} ₫</Text>
+                <Text style={[styles.itemState, { color: item.state === "Đã đặt" ? "red" : "black" }]}>{item.state}</Text>
+            </View>
+            <View style={styles.buttonContainer}>
+                <Button buttonColor="#4CAF50" mode="contained" style={styles.button} onPress={() => handleDetail(item)}>Thông tin</Button>
+                <Button buttonColor="#f44336" mode="contained" style={styles.button} onPress={() => handleDelete(item)}>Hủy bàn</Button>
+                <Button buttonColor="#2196F3" mode="contained" style={styles.button} onPress={() => openDeleteFoodModal(item)}>Xóa món</Button>
             </View>
         </ScrollView>
     );
@@ -117,7 +115,7 @@ const Appointments = ({ navigation }) => {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
             <Text style={styles.headerText}>Appointments</Text>
             <FlatList
                 data={appointments}
@@ -131,30 +129,32 @@ const Appointments = ({ navigation }) => {
                     visible={modalVisible}
                     onRequestClose={() => setModalVisible(!modalVisible)}
                 >
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Chọn món ăn bạn muốn xóa khỏi bàn:</Text>
-                        {selectedAppointment.food && selectedAppointment.food.length > 0 ? (
-                            <FlatList
-                                data={selectedAppointment.food}
-                                renderItem={({ item, index }) => (
-                                    <TouchableHighlight
-                                        style={styles.foodItem}
-                                        onPress={() => handleDeleteFood(item, index)}
-                                    >
-                                        <Text style={styles.foodText}>{item.title}</Text>
-                                    </TouchableHighlight>
-                                )}
-                                keyExtractor={(item, index) => index.toString()}
-                            />
-                        ) : (
-                            <Text style={styles.noFoodText}>Chưa đặt món</Text>
-                        )}
-                        <TouchableHighlight
-                            style={styles.closeButton}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>Đóng</Text>
-                        </TouchableHighlight>
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalText}>Chọn món ăn bạn muốn xóa khỏi bàn:</Text>
+                            {selectedAppointment.food && selectedAppointment.food.length > 0 ? (
+                                <FlatList
+                                    data={selectedAppointment.food}
+                                    renderItem={({ item, index }) => (
+                                        <TouchableOpacity
+                                            style={styles.foodItem}
+                                            onPress={() => handleDeleteFood(item, index)}
+                                        >
+                                            <Text style={styles.foodText}>{item.title}</Text>
+                                        </TouchableOpacity>
+                                    )}
+                                    keyExtractor={(item, index) => index.toString()}
+                                />
+                            ) : (
+                                <Text style={styles.noFoodText}>Chưa đặt món</Text>
+                            )}
+                            <TouchableOpacity
+                                style={styles.closeButton}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            >
+                                <Text style={styles.textStyle}>Đóng</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </Modal>
             )}
@@ -163,45 +163,60 @@ const Appointments = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#ffffff',
+    },
     headerText: {
         padding: 15,
         fontSize: 25,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        textAlign: 'center',
     },
     itemContainer: {
         margin: 10,
         padding: 15,
         borderRadius: 15,
         marginVertical: 5,
-        backgroundColor: '#e0e0e0'
+        backgroundColor: '#f0f0f0'
+    },
+    itemContent: {
+        marginBottom: 10,
     },
     itemTitle: {
-        marginTop: 10,
         fontSize: 20,
         fontWeight: "bold",
     },
     itemPrice: {
-        fontSize: 20,
+        fontSize: 18,
         color: 'green',
     },
     itemState: {
-        fontSize: 20,
+        fontSize: 18,
         color: 'gray',
     },
-    cancelButton: {
-        marginLeft: 10,
-        margin: 5
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
     },
-    itemContent: {
-        alignItems: 'left',
-        marginBottom: 10,
-        marginLeft: 20
+    button: {
+        flex: 1,
+        margin: 5,
+        marginHorizontal: 2,
+        paddingHorizontal: 5,
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0,0,0,0.5)",
     },
     modalView: {
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
+        padding: 20,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -210,40 +225,43 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+        elevation: 5,
+        width: '80%',
     },
     closeButton: {
-        backgroundColor: "pink",
+        backgroundColor: "#ff4081",
         borderRadius: 20,
         padding: 10,
-        marginTop: 10,
-        elevation: 2
+        marginTop: 15,
+        width: '30%',
+        alignItems: 'center',
     },
     textStyle: {
-        color: "black",
+        color: "white",
         fontWeight: "bold",
         textAlign: "center"
     },
     modalText: {
         marginBottom: 15,
         textAlign: "center",
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "bold"
     },
     foodItem: {
         padding: 10,
-        margin: 5,
-        backgroundColor: "#f0f0f0",
+        marginVertical: 5,
+        backgroundColor: "#e0e0e0",
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
+        width: '100%',
     },
     foodText: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: "bold",
     },
     noFoodText: {
-        fontSize: 18,
+        fontSize: 16,
         color: 'red',
         textAlign: 'center',
         marginVertical: 10,

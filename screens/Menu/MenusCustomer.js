@@ -190,7 +190,7 @@ const MenusCustomer = ({ navigation }) => {
                 data={menus}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
-                numColumns={3}
+                numColumns={2}
             />
             <Modal
                 animationType="slide"
@@ -200,30 +200,32 @@ const MenusCustomer = ({ navigation }) => {
                     setModalVisible(!modalVisible);
                 }}
             >
-                <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Chọn bàn đã đặt để thêm món: </Text>
-                    {appointments.length > 0 ? (
-                        <FlatList
-                            data={appointments}
-                            renderItem={({ item }) => (
-                                <TouchableHighlight
-                                    style={styles.appointmentItem}
-                                    onPress={() => handleAddMenuToAppointment(item)}
-                                >
-                                    <Text style={styles.appointmentText}>{item.title}</Text>
-                                </TouchableHighlight>
-                            )}
-                            keyExtractor={item => item.id}
-                        />
-                    ) : (
-                        <Text style={styles.noAppointmentText}>Chưa đặt bàn</Text>
-                    )}
-                    <TouchableHighlight
-                        style={styles.closeButton}
-                        onPress={() => setModalVisible(!modalVisible)}
-                    >
-                        <Text style={styles.textStyle}>Đóng</Text>
-                    </TouchableHighlight>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Chọn bàn đã đặt để thêm món:</Text>
+                        {appointments.length > 0 ? (
+                            <FlatList
+                                data={appointments}
+                                renderItem={({ item }) => (
+                                    <TouchableHighlight
+                                        style={styles.appointmentItem}
+                                        onPress={() => handleAddMenuToAppointment(item)}
+                                    >
+                                        <Text style={styles.appointmentText}>{item.title}</Text>
+                                    </TouchableHighlight>
+                                )}
+                                keyExtractor={item => item.id}
+                            />
+                        ) : (
+                            <Text style={styles.noAppointmentText}>Chưa đặt bàn</Text>
+                        )}
+                        <TouchableHighlight
+                            style={styles.closeButton}
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
+                            <Text style={styles.textStyle}>Đóng</Text>
+                        </TouchableHighlight>
+                    </View>
                 </View>
             </Modal>
         </View>
@@ -287,8 +289,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'gray',
     },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
     modalView: {
-        margin: 20,
+        width: '80%',
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,

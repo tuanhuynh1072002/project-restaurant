@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, Alert, StyleSheet } from "react-native";
-import { Text } from "react-native-paper";
+import { Text, Appbar, Card, Menu, Button } from "react-native-paper";
 import firestore from '@react-native-firebase/firestore';
-import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
+import { Menu as PopupMenu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
 import auth from '@react-native-firebase/auth';
 
 const Customers = ({ navigation }) => {
@@ -57,33 +57,39 @@ const Customers = ({ navigation }) => {
     };
 
     const renderItem = ({ item }) => (
-        <Menu>
+        <PopupMenu>
             <MenuTrigger>
-                <View style={styles.customerContainer}>
-                    <Text style={styles.customerText}>Email: {item.email} | Password: {item.password}</Text>
-                </View>
+                <Card style={styles.customerContainer}>
+                    <Card.Content>
+                        <Text style={styles.customerText}>Email: {item.email}</Text>
+                        <Text style={styles.customerText}>Password: {item.password}</Text>
+                    </Card.Content>
+                </Card>
             </MenuTrigger>
             <MenuOptions>
                 <MenuOption onSelect={() => handleUpdate(item)}>
-                    <Text>Cập nhật</Text>
+                    <Text style={styles.menuText}>Cập nhật</Text>
                 </MenuOption>
                 <MenuOption onSelect={() => handleDelete(item)}>
-                    <Text>Xóa khách hàng</Text>
+                    <Text style={[styles.menuText, { color: 'red' }]}>Xóa khách hàng</Text>
                 </MenuOption>
                 <MenuOption onSelect={() => handleDetail(item)}>
-                    <Text>Thông tin</Text>
+                    <Text style={styles.menuText}>Thông tin</Text>
                 </MenuOption>
             </MenuOptions>
-        </Menu>
+        </PopupMenu>
     );
 
     return (
         <View style={{ flex: 1 }}>
-            <Text style={styles.headerText}>Customers</Text>
+            <Appbar.Header>
+                <Appbar.Content title="Customers" />
+            </Appbar.Header>
             <FlatList
                 data={customers}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
+                contentContainerStyle={styles.listContent}
             />
         </View>
     );
@@ -92,19 +98,19 @@ const Customers = ({ navigation }) => {
 const styles = StyleSheet.create({
     customerContainer: {
         margin: 10,
-        padding: 15,
-        borderRadius: 15,
-        marginVertical: 5,
-        backgroundColor: '#e0e0e0',
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        elevation: 3,
     },
     customerText: {
-        fontSize: 18,
-        fontWeight: "bold",
+        fontSize: 16,
     },
-    headerText: {
-        padding: 15,
-        fontSize: 25,
-        fontWeight: "bold",
+    menuText: {
+        fontSize: 18,
+        padding: 10,
+    },
+    listContent: {
+        padding: 10,
     },
 });
 

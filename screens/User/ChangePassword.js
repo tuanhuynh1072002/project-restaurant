@@ -26,7 +26,6 @@ const ChangePassword = ({ navigation }) => {
     }, [errorText, newPassword, confirmNewPassword]);
 
     const handleChangePassword = async () => {
-
         try {
             const user = auth().currentUser;
 
@@ -50,59 +49,70 @@ const ChangePassword = ({ navigation }) => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
             <ScrollView contentContainerStyle={styles.container}>
-                <Image source={require("../assets/logocircle.png")} style={styles.logo} />
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        label="Mật khẩu hiện tại"
-                        secureTextEntry={!showCurrentPassword}
-                        value={currentPassword}
-                        onChangeText={setCurrentPassword}
-                        style={styles.input}
-                    />
-                    <TouchableOpacity onPress={() => setShowCurrentPassword(!showCurrentPassword)}>
-                        <Image
-                            source={showCurrentPassword ? require('../assets/eye.png') : require('../assets/eye-hidden.png')}
-                            style={styles.eyeIcon}
+                <View style={styles.formContainer}>
+                    <Image source={require("../assets/logocircle.png")} style={styles.logo} />
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            label="Mật khẩu hiện tại"
+                            secureTextEntry={!showCurrentPassword}
+                            value={currentPassword}
+                            onChangeText={setCurrentPassword}
+                            style={styles.input}
+                            mode="outlined"
                         />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        label="Mật khẩu mới"
-                        secureTextEntry={!showNewPassword}
-                        value={newPassword}
-                        onChangeText={setNewPassword}
-                        style={styles.input}
-                    />
-                    <TouchableOpacity onPress={() => setShowNewPassword(!showNewPassword)}>
-                        <Image
-                            source={showNewPassword ? require('../assets/eye.png') : require('../assets/eye-hidden.png')}
-                            style={styles.eyeIcon}
+                        <TouchableOpacity onPress={() => setShowCurrentPassword(!showCurrentPassword)}>
+                            <Image
+                                source={showCurrentPassword ? require('../assets/eye.png') : require('../assets/eye-hidden.png')}
+                                style={styles.eyeIcon}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            label="Mật khẩu mới"
+                            secureTextEntry={!showNewPassword}
+                            value={newPassword}
+                            onChangeText={setNewPassword}
+                            style={styles.input}
+                            mode="outlined"
                         />
-                    </TouchableOpacity>
-                </View>
-                {newPassword.length < 6 && <HelperText style={{marginRight: 90}} type="error">Mật khẩu mới phải có ít nhất 6 ký tự.</HelperText>}
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        label="Xác nhận mật khẩu mới"
-                        secureTextEntry={!showConfirmNewPassword}
-                        value={confirmNewPassword}
-                        onChangeText={setConfirmNewPassword}
-                        style={styles.input}
-                    />
-                    <TouchableOpacity onPress={() => setShowConfirmNewPassword(!showConfirmNewPassword)}>
-                        <Image
-                            source={showConfirmNewPassword ? require('../assets/eye.png') : require('../assets/eye-hidden.png')}
-                            style={styles.eyeIcon}
+                        <TouchableOpacity onPress={() => setShowNewPassword(!showNewPassword)}>
+                            <Image
+                                source={showNewPassword ? require('../assets/eye.png') : require('../assets/eye-hidden.png')}
+                                style={styles.eyeIcon}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    {newPassword.length < 6 && <HelperText type="error" style={styles.helperText}>Mật khẩu mới phải có ít nhất 6 ký tự.</HelperText>}
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            label="Xác nhận mật khẩu mới"
+                            secureTextEntry={!showConfirmNewPassword}
+                            value={confirmNewPassword}
+                            onChangeText={setConfirmNewPassword}
+                            style={styles.input}
+                            mode="outlined"
                         />
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setShowConfirmNewPassword(!showConfirmNewPassword)}>
+                            <Image
+                                source={showConfirmNewPassword ? require('../assets/eye.png') : require('../assets/eye-hidden.png')}
+                                style={styles.eyeIcon}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    {errorText !== '' && <HelperText type="error" style={styles.helperText}>{errorText}</HelperText>}
+                    {confirmNewPassword.length < 6 && <HelperText type="error" style={styles.helperText}>Mật khẩu mới phải có ít nhất 6 ký tự.</HelperText>}
+                    {newPassword !== confirmNewPassword && <HelperText type="error" style={styles.helperText}>Mật khẩu mới và xác nhận không khớp.</HelperText>}
+                    <Button
+                        mode="contained"
+                        onPress={handleChangePassword}
+                        style={styles.button}
+                        disabled={disableButton}
+                        textColor="black"
+                    >
+                        Đổi mật khẩu
+                    </Button>
                 </View>
-                {errorText !== '' && <HelperText  type="error">{errorText}</HelperText>}
-                {confirmNewPassword.length < 6 && <HelperText style={{marginRight: 90}} type="error">Mật khẩu mới phải có ít nhất 6 ký tự.</HelperText>}
-                {newPassword !== confirmNewPassword && <HelperText style={{marginRight: 75}} type="error">Mật khẩu mới và xác nhận không khớp.</HelperText>}
-                <Button textColor="black" buttonColor="pink" mode="contained" onPress={handleChangePassword} style={styles.button} disabled={disableButton}>
-                    Đổi mật khẩu
-                </Button>
             </ScrollView>
         </KeyboardAvoidingView>
     );
@@ -110,38 +120,54 @@ const ChangePassword = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
+        flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 50,
+        padding: 20,
+        backgroundColor: '#f7f7f7',
+    },
+    formContainer: {
+        width: '100%',
+        maxWidth: 400,
+        padding: 20,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 10,
+        backgroundColor: '#fff',
     },
     logo: {
         alignSelf: "center",
-        marginBottom: 20,
-        height: 200,
-        width: 200
-    },
-    title: {
-        fontSize: 20,
-        marginBottom: 10
+        marginBottom: 30,
+        height: 120,
+        width: 120,
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
-        width: 300
+        marginBottom: 15,
+        width: '100%',
     },
     input: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'white',
     },
     eyeIcon: {
-        margin: 20,
-        width: 20,
-        height: 20
+        marginLeft: 10,
+        width: 24,
+        height: 24,
     },
     button: {
-        marginTop:10,
-        width: 300
-    }
+        marginTop: 20,
+        width: '100%',
+        paddingVertical: 10,
+        backgroundColor: 'pink',
+    },
+    helperText: {
+        width: '100%',
+        textAlign: 'left',
+        marginTop: -10,
+        marginBottom: 10,
+    },
 });
 
 export default ChangePassword;

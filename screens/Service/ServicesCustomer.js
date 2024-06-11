@@ -84,14 +84,14 @@ const ServicesCustomer = ({ navigation }) => {
             />
             <View style={styles.header}>
                 <Text style={styles.headerText}>
-                    Danh sách dịch vụ
+                    Danh sách bàn
                 </Text>
             </View>
             <FlatList
                 data={services}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
-                numColumns={3}
+                numColumns={2}
             />
         </View>
     )
